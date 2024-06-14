@@ -85,6 +85,8 @@ DATABASES = {
 # Allow all origins to access your API (for development purposes)
 CORS_ALLOW_ALL_ORIGINS = True
 
+ALLOWED_HOSTS = ['*']
+
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',

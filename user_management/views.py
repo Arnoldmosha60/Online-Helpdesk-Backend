@@ -2,16 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from user_management.models import User
-from user_management.serializers import UserSerializer, ChangePasswordSerializer
+from user_management.serializers import UserSerializer, ChangePasswordSerializer, LoginSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate, login
 from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate, login
 
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
-    queryset = User.objects.all()
 
     def post(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)
@@ -24,23 +23,28 @@ class RegisterView(APIView):
                 )
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        else:
+            # Log the validation errors
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
-        data = request.data
-        email = data.get('email')
-        password = data.get('password')
-        user = authenticate(request, username=email, password=password)
-
-        if user is not None:
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            login(request, user)
             token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key, 'user': UserSerializer(user).data}, status=status.HTTP_200_OK)
+            user_serializer = UserSerializer(user)
+            return Response({
+                'token': token.key,
+                'user': user_serializer.data,
+                'success': True
+            }, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GetUser(APIView):
     @staticmethod

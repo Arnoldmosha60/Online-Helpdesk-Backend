@@ -9,10 +9,11 @@ class Issue(models.Model):
     category = models.CharField(max_length=50)
     urgency_level = models.CharField(max_length=20)
     submitted_on = models.DateTimeField(auto_now=True)
-    issued_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    status=models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.id} - {self.issued_by.fullname}"
+        return f"{self.id} => {self.user.id}"
 
     class Meta:
         db_table = 'issue'
