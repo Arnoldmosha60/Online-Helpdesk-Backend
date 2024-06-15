@@ -5,5 +5,5 @@ app_name = 'helpdesk_sys'
 
 urlpatterns = [
     path('issues/', IssueListCreateView.as_view(), name='issue-list-create'),
-    path('issues/<uuid:pk>/', IssueDetailView.as_view(), name='issue-detail'),
+    path('issues/<uuid:user_id>/', IssueDetailView.as_view(), name='issue-detail'),
 ]
