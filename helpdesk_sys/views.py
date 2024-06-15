@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 class IssueListCreateView(APIView):
     def get(self, request):
         issues = Issue.objects.select_related('user').all() 
+        print(issues)
         serializer = IssueSerializer(issues, many=True)
         return Response(serializer.data)
     
