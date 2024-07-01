@@ -81,6 +81,19 @@ class IssueDetailView(APIView):
 class IssueResponseCreateUpdateView(APIView):
     permission_classes = [IsAuthenticated]
 
+    def get(self, request, pk):
+        try:
+            issue_responses = IssueResponse.objects.filter(issue=pk)
+            if issue_responses.exists():
+                serializer = IssueResponseSerializer(issue_responses, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                print(serializer.errors)
+                return Response({'error': 'No responses found for this issue'}, status=status.HTTP_404_NOT_FOUND)
+        except IssueResponse.DoesNotExist:
+            return Response({'error': 'IssueResponse not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
     def post(self, request):
         serializer = IssueResponseSerializer(data=request.data)
         if serializer.is_valid():
