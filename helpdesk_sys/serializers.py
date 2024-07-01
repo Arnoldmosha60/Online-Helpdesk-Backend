@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Issue, IssueResponse
+from .models import Issue, IssueResponse, Feedback
 
 class IssueSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,3 +14,9 @@ class IssueResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = IssueResponse
         fields = '__all__'
+
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = '__all__' 

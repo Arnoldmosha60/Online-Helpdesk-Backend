@@ -4,3 +4,4 @@ from .models import *
 # Register your models here.
 admin.site.register(Issue)
 admin.site.register(IssueResponse)
+admin.site.register(Feedback)

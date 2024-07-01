@@ -29,3 +29,16 @@ class IssueResponse(models.Model):
 
     class Meta:
         db_table = 'issueresponse'
+
+
+class Feedback(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    response = models.ForeignKey('IssueResponse', on_delete=models.CASCADE)
+    feedback_text = models.TextField()
+    submitted_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.response.id}"
+
+    class Meta:
+        db_table = 'feedback'

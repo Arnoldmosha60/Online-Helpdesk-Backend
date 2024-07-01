@@ -1,7 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render
-from .serializers import IssueResponseSerializer, IssueSerializer
-from .models import Issue, IssueResponse
+from .serializers import FeedbackSerializer, IssueResponseSerializer, IssueSerializer
+from .models import Feedback, Issue, IssueResponse
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -139,3 +139,17 @@ class IssueResponseListView(APIView):
         issue_responses = IssueResponse.objects.select_related('issue').all()
         serializer = IssueResponseSerializer(issue_responses, many=True)
         return Response(serializer.data)
+
+
+class FeedbackView(APIView):
+    def get(self, request, response_id):
+        feedbacks = Feedback.objects.filter(response=response_id)
+        serializer = FeedbackSerializer(feedbacks, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = FeedbackSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -9,4 +9,6 @@ urlpatterns = [
     path('issue-response/', IssueResponseCreateUpdateView.as_view(), name='issue-response-create'),
     path('issue-response/<uuid:pk>/', IssueResponseCreateUpdateView.as_view(), name='issue-response-update'),
     path('get-issue-responses/', IssueResponseListView.as_view(), name='get_all_issue_response'),
+    path('feedback/', FeedbackView.as_view(), name="feedback"),
+    path('response-feedback/<uuid:response_id>/', FeedbackView.as_view(), name='get_response_feedback'),
 ]
