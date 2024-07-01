@@ -20,7 +20,7 @@ class Issue(models.Model):
 
 class IssueResponse(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    description = models.CharField(max_length=500)
+    response = models.CharField(max_length=500)
     reply_date = models.DateTimeField(auto_now=True)
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
 
